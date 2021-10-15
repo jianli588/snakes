@@ -43,6 +43,7 @@ class Hamiltonian:
             numbering += 1
             transverse[0] -= 1
 
+
 class Transverse:
 
     def __init__(self):
@@ -53,12 +54,39 @@ class Transverse:
     def move(self):
 
         if self.direction == Constants.RIGHT:
-            pass
-        elif self.direction == Constants.LEFT:
-            pass
-        elif self.direction == Constants.UP:
-            pass
-        elif self.direction == Constants.DOWN:
-            pass
+            right_value = self.check_right()
+            left_value = self.check_left()
+            up_value = self.check_up()
+            down_value = self.check_down()
 
+        elif self.direction == Constants.LEFT:
+            right_value = self.check_right()
+            left_value = self.check_left()
+            up_value = self.check_up()
+            down_value = self.check_down()
+
+        elif self.direction == Constants.UP:
+            right_value = self.check_right()
+            left_value = self.check_left()
+            up_value = self.check_up()
+            down_value = self.check_down()
+
+        elif self.direction == Constants.DOWN:
+            right_value = self.check_right()
+            left_value = self.check_left()
+            up_value = self.check_up()
+            down_value = self.check_down()
+
+        pass
+
+    def check_right(self) -> int:
+        pass
+
+    def check_left(self) -> int:
+        pass
+
+    def check_up(self) -> int:
+        pass
+
+    def check_down(self) -> int:
         pass
