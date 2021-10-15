@@ -1,0 +1,6 @@
+
+*.xml
+.gitattributes
+*.iml
+snakes/
+*.pyc
