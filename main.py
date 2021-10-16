@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 
 from Location import Snake, Food
+from AI import Transverse
 import Constants
 # constants
 
@@ -12,6 +13,7 @@ pygame.event.pump()
 
 snake = Snake()
 food = Food()
+ai = Transverse()
 
 
 # https://stackoverflow.com/a/61007670
@@ -32,7 +34,7 @@ def draw_window():
                                                          Constants.BLOCK_SIZE,
                                                          Constants.BLOCK_SIZE))
 
-    head_rectangle = pygame.draw.rect(WIN, Constants.RED, pygame.Rect(Constants.BLOCK_SIZE*snake.head[0],
+    head_rectangle = pygame.draw.rect(WIN, Constants.YELLOW, pygame.Rect(Constants.BLOCK_SIZE*snake.head[0],
                                                                       Constants.BLOCK_SIZE*snake.head[1],
                                                                       Constants.BLOCK_SIZE,
                                                                       Constants.BLOCK_SIZE))
@@ -49,23 +51,21 @@ def draw_window():
     pygame.display.update()
 
 
-def main():
-    clock = pygame.time.Clock()
-    run = True
+def ai_play():
 
-    while run:
-        clock.tick(Constants.FPS)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-        key_pressed()
-        draw_window()
+    next_move = ai.move(food.coordinates)
 
-        if snake.collision():
-            run = False
+    if next_move == Constants.RIGHT:
+        snake.turn_right()
 
-    pygame.quit()
-    print(f"points: {snake.point}")
+    elif next_move == Constants.LEFT:
+        snake.turn_left()
+
+    elif next_move == Constants.UP:
+        snake.turn_up()
+
+    else:
+        snake.turn_down()
 
 
 def key_pressed():
@@ -79,6 +79,29 @@ def key_pressed():
         snake.turn_down()
     elif keys[K_UP]:
         snake.turn_up()
+
+
+def main():
+    draw_window()
+
+    clock = pygame.time.Clock()
+    run = True
+
+    while run:
+        clock.tick(Constants.FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        ai_play()
+        #key_pressed()
+        draw_window()
+
+        if snake.collision():
+            run = False
+
+    pygame.quit()
+    print(f"points: {snake.point}")
 
 
 if __name__ == '__main__':
