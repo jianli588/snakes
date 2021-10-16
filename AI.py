@@ -66,27 +66,28 @@ class Transverse:
         self.skip -= first_seg - second_seg
         self.skipped_tiles.insert(0, first_seg - second_seg)
 
-    def update_skip(self, value, apple_location):
-
-        if self.head_location != apple_location:
-            self.skip += self.skipped_tiles.pop()
+    def update_skip(self, current, value, apple_location):
 
         self.skip -= value
         self.skipped_tiles.insert(0, value)
+
+        if current + value != apple_location:
+            self.skip += self.skipped_tiles.pop()
+        else:
+            print(f"{self.skipped_tiles} {self.skip}")
 
     @staticmethod
     def check_positions(current, apple, next_value) -> int:
 
         # increase the value of the number, if the position of the apple is before current grid
-        if current > current:
+        if current > apple:
             apple += 600
 
         if current > next_value:
             next_value += 600
 
         if next_value > apple > current:
-             return 601
-
+            return -1
 
         return next_value - current
 
@@ -94,7 +95,7 @@ class Transverse:
 
         new_cord = self.head_location[0] + 1
         if new_cord == 30:
-            return 602
+            return -1
 
         next_value = self.path.grid_number.get((new_cord, self.head_location[1]))
 
@@ -104,7 +105,7 @@ class Transverse:
 
         new_cord = self.head_location[0] - 1
         if new_cord == -1:
-            return 602
+            return -1
 
         next_value = self.path.grid_number.get((new_cord, self.head_location[1]))
 
@@ -114,7 +115,7 @@ class Transverse:
 
         new_cord = self.head_location[1] - 1
         if new_cord == -1:
-            return 602
+            return -1
 
         next_value = self.path.grid_number.get((self.head_location[0], new_cord))
 
@@ -123,8 +124,8 @@ class Transverse:
     def check_down(self, current, apple) -> int:
 
         new_cord = self.head_location[1] + 1
-        if new_cord >= 20:
-            return 602
+        if new_cord == 20:
+            return -1
 
         next_value = self.path.grid_number.get((self.head_location[0], new_cord))
 
@@ -145,60 +146,23 @@ class Transverse:
 
         # after a snake moves pass a tile, it adds back the number of skipped tiles back
 
-
-
         # finds the largest number of tiles skipped, that would not result in the snake bumping into itself
-        # if self.skip >= right_value >= max(left_value, up_value, down_value):
-        #     self.update_skip(right_value)
-        #     self.head_location[0] += 1
-        #     return Constants.RIGHT
-        #
-        # if self.skip >= left_value >= max(up_value, down_value):
-        #     self.update_skip(left_value)
-        #     self.head_location[0] -= 1
-        #     return Constants.LEFT
-        #
-        # if self.skip >= up_value >= down_value:
-        #     self.update_skip(up_value)
-        #     self.head_location[1] -= 1
-        #     return Constants.UP
-        #
-        # else:
-        #     self.update_skip(down_value)
-        #     self.head_location[1] += 1
-        #     return Constants.DOWN
-
-        if right_value == 1:
-
-            self.head_location[0] = self.head_location[0] + 1
-            self.head_location[0] = self.head_location[0] - 1
-
-            self.update_skip(right_value, apple_location)
+        if self.skip > right_value > max(left_value, up_value, down_value):
+            self.update_skip(current, right_value, apple_location)
             return Constants.RIGHT
 
-        if left_value == 1:
-
-            self.head_location[0] = self.head_location[0] - 1
-            self.head_location[0] = self.head_location[0] + 1
-
-            self.update_skip(left_value, apple_location)
+        if self.skip > left_value > max(up_value, down_value):
+            self.update_skip(current, left_value, apple_location)
             return Constants.LEFT
 
-        if up_value == 1:
-
-            self.head_location[1] = self.head_location[1] - 1
-            self.head_location[1] = self.head_location[1] + 1
-
-            self.update_skip(up_value, apple_location)
+        if self.skip > up_value > down_value:
+            self.update_skip(current, up_value, apple_location)
             return Constants.UP
 
-        if down_value == 1:
-
-            self.head_location[1] = self.head_location[1] + 1
-            self.head_location[1] = self.head_location[1] - 1
-
-            self.update_skip(down_value, apple_location)
+        if self.skip > down_value:
+            self.update_skip(current, down_value, apple_location)
             return Constants.DOWN
 
-
-
+        print("error")
+        self.update_skip(current, right_value, apple_location)
+        return Constants.RIGHT
