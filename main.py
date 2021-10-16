@@ -10,9 +10,6 @@ WIN = pygame.display.set_mode((Constants.WIDTH, Constants.HEIGHT))
 pygame.display.set_caption("Snake!")
 pygame.event.pump()
 
-SQUARE = pygame.image.load("images/square.png")
-HEAD = pygame.image.load("images/head.png")
-
 snake = Snake()
 food = Food()
 
@@ -57,7 +54,7 @@ def main():
     run = True
 
     while run:
-        clock.tick(FPS)
+        clock.tick(Constants.FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -68,7 +65,7 @@ def main():
             run = False
 
     pygame.quit()
-    print(snake.point)
+    print(f"points: {snake.point}")
 
 
 def key_pressed():

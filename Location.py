@@ -40,7 +40,6 @@ class Snake:
 
         for segment in self.segments[1:]:
             if self.head == segment:
-                print("hello")
                 return True
 
         return False
@@ -65,7 +64,11 @@ class Snake:
 class Food:
 
     def __init__(self):
-        self.coordinates = [random.randint(0, 29) + 0.5, random.randint(0, 19) + 0.5]
+        self.x_cord = random.randint(0, 29)
+        self.y_cord = random.randint(0, 19)
+        self.coordinates = [self.x_cord + 0.5, self.y_cord + 0.5]
 
     def refresh(self):
-        self.coordinates = [random.randint(0, 29) + 0.5, random.randint(0, 19) + 0.5]
+        self.x_cord = random.randint(0, 29)
+        self.y_cord = random.randint(0, 19)
+        self.coordinates = [self.x_cord + 0.5, self.y_cord + 0.5]
