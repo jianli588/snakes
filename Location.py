@@ -68,7 +68,15 @@ class Food:
         self.y_cord = random.randint(0, 19)
         self.coordinates = [self.x_cord + 0.5, self.y_cord + 0.5]
 
-    def refresh(self):
-        self.x_cord = random.randint(0, 29)
-        self.y_cord = random.randint(0, 19)
+    def refresh(self, snake):
+
+        run = True
+        while run:
+            self.x_cord = random.randint(0, 29)
+            self.y_cord = random.randint(0, 19)
+            run = False
+            for segments in snake.segments:
+                if self.x_cord == segments[0] and self.y_cord == segments[1]:
+                    run = True
+                    break
         self.coordinates = [self.x_cord + 0.5, self.y_cord + 0.5]

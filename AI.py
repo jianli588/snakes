@@ -54,6 +54,7 @@ class Transverse:
         self.head_location = Constants.SNAKE[0]
         self.direction = Constants.RIGHT
         self.skipped_tiles = list()
+        self.length = 3
         # inserts the starting snake in to the tiles
 
         third_seg = self.path.grid_number.get((Constants.SNAKE[2][0], Constants.SNAKE[2][1]))
@@ -66,6 +67,8 @@ class Transverse:
         self.skip -= first_seg - second_seg
         self.skipped_tiles.insert(0, first_seg - second_seg)
 
+        self.skip -= 1
+
     def update_skip(self, current, value, apple_location):
 
         self.skip -= value
@@ -73,11 +76,12 @@ class Transverse:
 
         if current + value != apple_location:
             self.skip += self.skipped_tiles.pop()
+            print(f"blocks allowed: {self.skip}")
         else:
             print(f"{self.skipped_tiles} {self.skip}")
+            self.length += 1
 
-    @staticmethod
-    def check_positions(current, apple, next_value) -> int:
+    def check_positions(self, current, apple, next_value) -> int:
 
         # increase the value of the number, if the position of the apple is before current grid
         if current > apple:
@@ -89,13 +93,16 @@ class Transverse:
         if next_value > apple > current:
             return -1
 
+        if next_value - current > self.skip:
+            return -3
+
         return next_value - current
 
     def check_right(self, current, apple) -> int:
 
         new_cord = self.head_location[0] + 1
         if new_cord == 30:
-            return -1
+            return -2
 
         next_value = self.path.grid_number.get((new_cord, self.head_location[1]))
 
@@ -105,7 +112,7 @@ class Transverse:
 
         new_cord = self.head_location[0] - 1
         if new_cord == -1:
-            return -1
+            return -2
 
         next_value = self.path.grid_number.get((new_cord, self.head_location[1]))
 
@@ -115,7 +122,7 @@ class Transverse:
 
         new_cord = self.head_location[1] - 1
         if new_cord == -1:
-            return -1
+            return -2
 
         next_value = self.path.grid_number.get((self.head_location[0], new_cord))
 
@@ -125,7 +132,7 @@ class Transverse:
 
         new_cord = self.head_location[1] + 1
         if new_cord == 20:
-            return -1
+            return -2
 
         next_value = self.path.grid_number.get((self.head_location[0], new_cord))
 
@@ -146,23 +153,37 @@ class Transverse:
 
         # after a snake moves pass a tile, it adds back the number of skipped tiles back
 
-        # finds the largest number of tiles skipped, that would not result in the snake bumping into itself
-        if self.skip > right_value > max(left_value, up_value, down_value):
+        if self.length > 500:
+            if right_value == 1:
+                self.update_skip(current, right_value, apple_location)
+                return Constants.RIGHT
+
+            if left_value == 1:
+                self.update_skip(current, left_value, apple_location)
+                return Constants.LEFT
+
+            if up_value == 1:
+                self.update_skip(current, up_value, apple_location)
+                return Constants.UP
+
+            if down_value == 1:
+                self.update_skip(current, down_value, apple_location)
+                return Constants.DOWN
+
+        # finds the largest number of tiles skipped that would not result in the snake bumping into itself
+        if right_value > max(left_value, up_value, down_value, 0):
             self.update_skip(current, right_value, apple_location)
             return Constants.RIGHT
 
-        if self.skip > left_value > max(up_value, down_value):
+        if left_value > max(up_value, down_value, 0):
             self.update_skip(current, left_value, apple_location)
             return Constants.LEFT
 
-        if self.skip > up_value > down_value:
+        if up_value > max(down_value, 0):
             self.update_skip(current, up_value, apple_location)
             return Constants.UP
 
-        if self.skip > down_value:
+        if down_value > 0:
             self.update_skip(current, down_value, apple_location)
             return Constants.DOWN
 
-        print("error")
-        self.update_skip(current, right_value, apple_location)
-        return Constants.RIGHT

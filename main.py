@@ -28,12 +28,20 @@ def draw_window():
     snake.move()
     WIN.fill(Constants.BACKGROUND)
 
-    for segment in snake.segments[1:]:
+    # draw the body
+    for segment in snake.segments[1:len(snake.segments)-1]:
         pygame.draw.rect(WIN, Constants.RED, pygame.Rect(Constants.BLOCK_SIZE*segment[0],
                                                          Constants.BLOCK_SIZE*segment[1],
                                                          Constants.BLOCK_SIZE,
                                                          Constants.BLOCK_SIZE))
 
+    # draw the tail
+    pygame.draw.rect(WIN, Constants.BLUE, pygame.Rect(Constants.BLOCK_SIZE * snake.segments[-1][0],
+                                                     Constants.BLOCK_SIZE * snake.segments[-1][1],
+                                                     Constants.BLOCK_SIZE,
+                                                     Constants.BLOCK_SIZE))
+
+    # draw the head
     head_rectangle = pygame.draw.rect(WIN, Constants.YELLOW, pygame.Rect(Constants.BLOCK_SIZE*snake.head[0],
                                                                       Constants.BLOCK_SIZE*snake.head[1],
                                                                       Constants.BLOCK_SIZE,
@@ -45,7 +53,7 @@ def draw_window():
     draw_grid()
 
     if food_rectangle.colliderect(head_rectangle):
-        food.refresh()
+        food.refresh(snake)
         snake.extend()
 
     pygame.display.update()
