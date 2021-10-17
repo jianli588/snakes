@@ -71,6 +71,8 @@ class Food:
     def refresh(self, snake):
 
         run = True
+
+        tally = 0
         while run:
             self.x_cord = random.randint(0, 29)
             self.y_cord = random.randint(0, 19)
@@ -79,4 +81,8 @@ class Food:
                 if self.x_cord == segments[0] and self.y_cord == segments[1]:
                     run = True
                     break
+            tally += 1
+
+            if tally == 5000:
+                print("game won!!!")
         self.coordinates = [self.x_cord + 0.5, self.y_cord + 0.5]
